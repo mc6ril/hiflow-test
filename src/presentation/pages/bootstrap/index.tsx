@@ -3,11 +3,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BootstrapCard } from '@/presentation/components/bootstrap-card';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
-import images from '@/shared/assets/images';
+import { appIcon } from '@/shared/assets/images/appIcon';
 
 import { createBootstrapPageStyles } from './styles';
 
-export function BootstrapPage() {
+export const BootstrapPage = () => {
   const { t } = useI18n();
   const theme = useTheme();
   const styles = createBootstrapPageStyles(theme);
@@ -16,10 +16,10 @@ export function BootstrapPage() {
     <SafeAreaView style={styles.safeArea}>
       <BootstrapCard
         eyebrow={t('app.name')}
-        imageSource={images.icon}
+        imageSource={appIcon}
         subtitle={t('bootstrap.subtitle')}
         title={t('bootstrap.title')}
       />
     </SafeAreaView>
   );
-}
+};

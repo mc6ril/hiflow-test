@@ -45,10 +45,10 @@ export const toRecipeProgressKey = (recipeId: number): RecipeProgressKey =>
   `${recipeId}`;
 
 export const computeRecipeStatus = (
-  progress: RecipeProgress,
+  progress: RecipeProgress | null | undefined,
   totalSteps: number,
 ): RecipeStatus => {
-  const completedSteps = progress.completedStepIndexes.length;
+  const completedSteps = progress?.completedStepIndexes.length ?? 0;
 
   if (completedSteps === 0) {
     return 'not_started';
@@ -65,18 +65,37 @@ export const computeRecipeStatus = (
   return 'in_progress';
 };
 
-export const toggleRecipeStep = (
-  progress: RecipeProgress,
-  stepIndex: number,
-): RecipeProgress => {
-  const completedStepIndexes = progress.completedStepIndexes.includes(stepIndex)
-    ? progress.completedStepIndexes.filter((index) => index !== stepIndex)
-    : [...progress.completedStepIndexes, stepIndex].sort(
+export const createRecipeProgress = (recipeId: number): RecipeProgress =>
+  Object.freeze({
+    recipeId,
+    completedStepIndexes: [],
+    updatedAt: new Date().toISOString(),
+  });
+
+export type ToggleRecipeStepParams = {
+  recipeId: number;
+  stepIndex: number;
+  progress?: RecipeProgress | null;
+};
+
+export const toggleRecipeStep = ({
+  recipeId,
+  stepIndex,
+  progress,
+}: ToggleRecipeStepParams): RecipeProgress => {
+  const currentProgress = progress ?? createRecipeProgress(recipeId);
+  const completedStepIndexes = currentProgress.completedStepIndexes.includes(
+    stepIndex,
+  )
+    ? currentProgress.completedStepIndexes.filter(
+        (index) => index !== stepIndex,
+      )
+    : [...currentProgress.completedStepIndexes, stepIndex].sort(
         (left, right) => left - right,
       );
 
   return Object.freeze({
-    ...progress,
+    ...currentProgress,
     completedStepIndexes,
     updatedAt: new Date().toISOString(),
   });
