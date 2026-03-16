@@ -18,10 +18,11 @@
     "errorSubtitle": "Le premier chargement a échoué. Vous pouvez réessayer."
   },
   "recipes": {
-    "subtitle": "Première page chargée depuis DummyJSON. La base est prête pour la pagination, la recherche et le détail.",
+    "subtitle": "Découvrez les recettes DummyJSON. Faites défiler la liste pour charger 5 recettes à la fois.",
     "loaded": "Recettes chargées",
     "restoredProgress": "Progressions restaurées",
     "empty": "Aucune recette disponible pour le moment.",
+    "paginationError": "Impossible de charger plus de recettes.",
     "status": {
       "notStarted": "À faire",
       "inProgress": "En cours",

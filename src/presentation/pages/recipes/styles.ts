@@ -8,9 +8,13 @@ export const createRecipesPageStyles = (theme: AppTheme) =>
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    listViewport: {
+      flex: 1,
+    },
     content: {
       padding: theme.spacing.xl,
       gap: theme.spacing.md,
+      paddingBottom: theme.spacing.xxl * 2,
     },
     header: {
       gap: theme.spacing.md,
@@ -87,6 +91,59 @@ export const createRecipesPageStyles = (theme: AppTheme) =>
     emptyState: {
       color: theme.colors.textMuted,
       textAlign: 'center',
+      ...theme.typography.body,
+    },
+    paginationErrorCard: {
+      borderRadius: theme.radii.md,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surface,
+      padding: theme.spacing.lg,
+      gap: theme.spacing.md,
+      alignItems: 'center',
+      ...theme.shadows.card,
+    },
+    paginationMessage: {
+      color: theme.colors.textMuted,
+      textAlign: 'center',
+      ...theme.typography.body,
+    },
+    paginationSpacer: {
+      height: theme.spacing.xl,
+    },
+    paginationRetryButton: {
+      minWidth: 160,
+      borderRadius: theme.radii.md,
+      backgroundColor: theme.colors.accent,
+      paddingHorizontal: theme.spacing.xl,
+      paddingVertical: theme.spacing.md,
+      alignItems: 'center',
+    },
+    paginationRetryButtonLabel: {
+      color: theme.colors.surface,
+      fontSize: 16,
+      fontWeight: '700',
+      lineHeight: 20,
+    },
+    paginationLoadingOverlay: {
+      position: 'absolute',
+      left: theme.spacing.xl,
+      right: theme.spacing.xl,
+      bottom: theme.spacing.lg,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: theme.spacing.sm,
+      borderRadius: theme.radii.md,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surface,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      ...theme.shadows.card,
+    },
+    paginationLoadingLabel: {
+      color: theme.colors.text,
       ...theme.typography.body,
     },
   });
