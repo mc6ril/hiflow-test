@@ -1,0 +1,14 @@
+{
+  "app": {
+    "name": "Mes recettes"
+  },
+  "bootstrap": {
+    "title": "Socle technique prêt",
+    "subtitle": "Clean architecture, DI, i18n et thème sont en place."
+  },
+  "common": {
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "retry": "Réessayer"
+  }
+}
