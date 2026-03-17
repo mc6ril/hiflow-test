@@ -2,10 +2,6 @@
   "app": {
     "name": "Mes recettes"
   },
-  "bootstrap": {
-    "title": "Socle technique prêt",
-    "subtitle": "Clean architecture, DI, i18n et thème sont en place."
-  },
   "common": {
     "close": "Fermer",
     "loading": "Chargement...",
@@ -22,6 +18,7 @@
     "loaded": "Recettes chargées",
     "restoredProgress": "Progressions restaurées",
     "empty": "Aucune recette disponible pour le moment.",
+    "paginationLoading": "Chargement de nouvelles recettes...",
     "paginationError": "Impossible de charger plus de recettes.",
     "card": {
       "prepTimeLabel": "préparation",

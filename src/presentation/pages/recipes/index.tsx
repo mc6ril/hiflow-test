@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
   FlatList,
+  type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
-  Pressable,
-  Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,16 +11,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   computeRecipeStatus,
   type PaginatedRecipes,
+  type Recipe,
   toRecipeProgressKey,
 } from '@/core/domain/recipes';
 import { listRecipes } from '@/core/usecases/listRecipes';
 import type { AppStartupSnapshot } from '@/core/usecases/startApp';
-import { useI18n } from '@/presentation/hooks/useI18n';
+import { RecipeListEmptyState } from '@/presentation/components/recipe/recipe-list-empty-state';
+import { RecipeListFooter } from '@/presentation/components/recipe/recipe-list-footer';
+import { RecipeListHeader } from '@/presentation/components/recipe/recipe-list-header';
+import { RecipeListItem } from '@/presentation/components/recipe/recipe-list-item';
+import { RecipePaginationLoadingOverlay } from '@/presentation/components/recipe/recipe-pagination-loading-overlay';
 import { useRequiredDependencies } from '@/presentation/hooks/useRequiredDependencies';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
 import { createRecipesPageStyles } from './styles';
-import { RecipeListItem } from '@/presentation/components/recipe-list-item';
 
 type RecipesPageProps = {
   snapshot: AppStartupSnapshot;
@@ -31,7 +33,6 @@ type RecipesPageProps = {
 const PAGINATION_TRIGGER_DISTANCE = 120;
 
 export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
-  const { t } = useI18n();
   const { recipesRepository } = useRequiredDependencies();
   const theme = useTheme();
   const styles = createRecipesPageStyles(theme);
@@ -65,6 +66,7 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
   }, [snapshot]);
 
   const hasMoreRecipes = recipesPage.items.length < recipesPage.total;
+  const restoredProgressCount = Object.keys(snapshot.progressById).length;
 
   const loadNextRecipesPage = async () => {
     const currentRecipesPage = recipesPageRef.current;
@@ -154,11 +156,7 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
     maybeFillViewport();
   };
 
-  const handleListLayout = ({
-    nativeEvent,
-  }: {
-    nativeEvent: { layout: { height: number } };
-  }) => {
+  const handleListLayout = ({ nativeEvent }: LayoutChangeEvent) => {
     listHeightRef.current = nativeEvent.layout.height;
     maybeFillViewport();
   };
@@ -187,6 +185,15 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
     void loadNextRecipesPage();
   };
 
+  const renderRecipeItem = ({ item }: { item: Recipe }) => {
+    const status = computeRecipeStatus(
+      snapshot.progressById[toRecipeProgressKey(item.id)],
+      item.instructions.length,
+    );
+
+    return <RecipeListItem recipe={item} status={status} />;
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.listViewport}>
@@ -194,50 +201,19 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
           contentContainerStyle={styles.content}
           data={recipesPage.items}
           keyExtractor={(item) => `${item.id}`}
-          ListEmptyComponent={
-            <Text style={styles.emptyState}>{t('recipes.empty')}</Text>
-          }
+          ListEmptyComponent={<RecipeListEmptyState />}
           ListFooterComponent={
-            paginationStatus === 'error' ? (
-              <View style={styles.paginationErrorCard}>
-                <Text style={styles.paginationMessage}>
-                  {t('recipes.paginationError')}
-                </Text>
-                <Pressable
-                  onPress={handleRetryPagination}
-                  style={styles.paginationRetryButton}
-                  testID="recipes-pagination-retry"
-                >
-                  <Text style={styles.paginationRetryButtonLabel}>
-                    {t('common.retry')}
-                  </Text>
-                </Pressable>
-              </View>
-            ) : hasMoreRecipes ? (
-              <View style={styles.paginationSpacer} />
-            ) : null
+            <RecipeListFooter
+              hasMoreRecipes={hasMoreRecipes}
+              onRetry={handleRetryPagination}
+              paginationStatus={paginationStatus}
+            />
           }
           ListHeaderComponent={
-            <View style={styles.header}>
-              <Text style={styles.title}>{t('app.name')}</Text>
-              <Text style={styles.subtitle}>{t('recipes.subtitle')}</Text>
-              <View style={styles.statsRow}>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>
-                    {recipesPage.items.length}
-                  </Text>
-                  <Text style={styles.statLabel}>{t('recipes.loaded')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>
-                    {Object.keys(snapshot.progressById).length}
-                  </Text>
-                  <Text style={styles.statLabel}>
-                    {t('recipes.restoredProgress')}
-                  </Text>
-                </View>
-              </View>
-            </View>
+            <RecipeListHeader
+              loadedRecipesCount={recipesPage.items.length}
+              restoredProgressCount={restoredProgressCount}
+            />
           }
           onContentSizeChange={handleContentSizeChange}
           onEndReached={handleEndReached}
@@ -246,21 +222,12 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
           onScroll={handleScroll}
           onScrollBeginDrag={handleUserInteraction}
           onTouchStart={handleUserInteraction}
+          renderItem={renderRecipeItem}
           scrollEventThrottle={16}
           testID="recipes-list"
-          renderItem={({ item }) => {
-            const status = computeRecipeStatus(
-              snapshot.progressById[toRecipeProgressKey(item.id)],
-              item.instructions.length,
-            );
-
-            return <RecipeListItem recipe={item} status={status} />;
-          }}
         />
         {paginationStatus === 'loading' ? (
-          <View pointerEvents="none" style={styles.paginationLoadingOverlay}>
-            <ActivityIndicator color={theme.colors.accent} size="small" />
-          </View>
+          <RecipePaginationLoadingOverlay />
         ) : null}
       </View>
     </SafeAreaView>
