@@ -23,6 +23,12 @@
     "restoredProgress": "Progressions restaurées",
     "empty": "Aucune recette disponible pour le moment.",
     "paginationError": "Impossible de charger plus de recettes.",
+    "card": {
+      "prepTimeLabel": "préparation",
+      "cookTimeLabel": "cuisson",
+      "difficultyLabel": "Difficulté",
+      "cuisineLabel": "Cuisine"
+    },
     "status": {
       "notStarted": "À faire",
       "inProgress": "En cours",

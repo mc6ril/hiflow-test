@@ -52,42 +52,6 @@ export const createRecipesPageStyles = (theme: AppTheme) =>
       color: theme.colors.textMuted,
       ...theme.typography.body,
     },
-    recipeCard: {
-      borderRadius: theme.radii.md,
-      backgroundColor: theme.colors.surface,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      padding: theme.spacing.lg,
-      gap: theme.spacing.sm,
-      ...theme.shadows.card,
-    },
-    recipeTopRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      gap: theme.spacing.md,
-    },
-    recipeName: {
-      flex: 1,
-      color: theme.colors.text,
-      fontSize: 18,
-      fontWeight: '700',
-      lineHeight: 24,
-    },
-    statusBadge: {
-      borderRadius: theme.radii.md,
-      backgroundColor: theme.colors.accentSoft,
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.sm,
-    },
-    statusLabel: {
-      color: theme.colors.accent,
-      ...theme.typography.eyebrow,
-    },
-    recipeMeta: {
-      color: theme.colors.textMuted,
-      ...theme.typography.body,
-    },
     emptyState: {
       color: theme.colors.textMuted,
       textAlign: 'center',

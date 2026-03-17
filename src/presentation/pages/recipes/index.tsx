@@ -14,8 +14,6 @@ import {
   computeRecipeStatus,
   type PaginatedRecipes,
   toRecipeProgressKey,
-  type Recipe,
-  type RecipeStatus,
 } from '@/core/domain/recipes';
 import { listRecipes } from '@/core/usecases/listRecipes';
 import type { AppStartupSnapshot } from '@/core/usecases/startApp';
@@ -23,14 +21,13 @@ import { useI18n } from '@/presentation/hooks/useI18n';
 import { useRequiredDependencies } from '@/presentation/hooks/useRequiredDependencies';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
+import { RecipeListItem } from './components/recipe-list-item';
 import { createRecipesPageStyles } from './styles';
 
 type RecipesPageProps = {
   snapshot: AppStartupSnapshot;
 };
 
-const totalRecipeMinutes = (recipe: Recipe): number =>
-  recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 const PAGINATION_TRIGGER_DISTANCE = 120;
 
 export function RecipesPage({ snapshot }: RecipesPageProps) {
@@ -68,17 +65,6 @@ export function RecipesPage({ snapshot }: RecipesPageProps) {
   }, [snapshot]);
 
   const hasMoreRecipes = recipesPage.items.length < recipesPage.total;
-
-  const translateStatus = (status: RecipeStatus): string => {
-    switch (status) {
-      case 'done':
-        return t('recipes.status.done');
-      case 'in_progress':
-        return t('recipes.status.inProgress');
-      default:
-        return t('recipes.status.notStarted');
-    }
-  };
 
   const loadNextRecipesPage = async () => {
     const currentRecipesPage = recipesPageRef.current;
@@ -268,22 +254,7 @@ export function RecipesPage({ snapshot }: RecipesPageProps) {
               item.instructions.length,
             );
 
-            return (
-              <View style={styles.recipeCard}>
-                <View style={styles.recipeTopRow}>
-                  <Text style={styles.recipeName}>{item.name}</Text>
-                  <View style={styles.statusBadge}>
-                    <Text style={styles.statusLabel}>
-                      {translateStatus(status)}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={styles.recipeMeta}>
-                  {item.cuisine} · {item.difficulty} ·{' '}
-                  {totalRecipeMinutes(item)} min
-                </Text>
-              </View>
-            );
+            return <RecipeListItem recipe={item} status={status} />;
           }}
         />
         {paginationStatus === 'loading' ? (
