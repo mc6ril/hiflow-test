@@ -10,6 +10,7 @@ import { AppLayout } from '@/presentation/layout';
 import { InitPage } from '@/presentation/pages/init';
 import { RecipesPage } from '@/presentation/pages/recipes';
 import { StartupFallbackPage } from '@/presentation/pages/startup-fallback';
+import { DesignSystemPage } from '@/presentation/pages/design-system';
 
 type AppRootState =
   | {
@@ -82,7 +83,8 @@ export const AppRoot = () => {
     <AppLayout dependencies={dependencies}>
       {state.status === 'ready' ? (
         <RecipesPage snapshot={state.snapshot} />
-      ) : state.status === 'error' ? (
+      ) : // <DesignSystemPage />
+      state.status === 'error' ? (
         <StartupFallbackPage message={state.message} onRetry={handleRetry} />
       ) : (
         <InitPage />

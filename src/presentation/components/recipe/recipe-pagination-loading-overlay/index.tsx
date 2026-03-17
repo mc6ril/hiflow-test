@@ -1,5 +1,7 @@
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
+import { UiCard } from '@/presentation/components/ui/card';
+import { UiText } from '@/presentation/components/ui/text';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
@@ -11,9 +13,16 @@ export const RecipePaginationLoadingOverlay = () => {
   const styles = createRecipePaginationLoadingOverlayStyles(theme);
 
   return (
-    <View pointerEvents="none" style={styles.container}>
-      <ActivityIndicator color={theme.colors.accent} size="small" />
-      <Text style={styles.label}>{t('recipes.paginationLoading')}</Text>
-    </View>
+    <UiCard
+      padded={false}
+      pointerEvents="none"
+      radius="md"
+      style={styles.container}
+    >
+      <View style={styles.content}>
+        <ActivityIndicator color={theme.colors.accent} size="small" />
+        <UiText>{t('recipes.paginationLoading')}</UiText>
+      </View>
+    </UiCard>
   );
 };

@@ -1,10 +1,6 @@
-import { Text, View } from 'react-native';
-
 import type { RecipeStatus } from '@/core/domain/recipes';
+import { UiBadge } from '@/presentation/components/ui/badge';
 import { useI18n } from '@/presentation/hooks/useI18n';
-import { useTheme } from '@/presentation/hooks/useTheme';
-
-import { createRecipeStatusBadgeStyles } from './styles';
 
 type RecipeStatusBadgeProps = {
   status: RecipeStatus;
@@ -16,8 +12,6 @@ export const RecipeStatusBadge = ({
   testID,
 }: RecipeStatusBadgeProps) => {
   const { t } = useI18n();
-  const theme = useTheme();
-  const styles = createRecipeStatusBadgeStyles(theme);
 
   if (status === 'not_started') {
     return null;
@@ -29,15 +23,12 @@ export const RecipeStatusBadge = ({
       : t('recipes.status.inProgress');
 
   return (
-    <View
-      style={[
-        styles.container,
-        status === 'done' ? styles.done : styles.inProgress,
-      ]}
+    <UiBadge
+      label={statusLabel}
+      showDot
       testID={testID}
-    >
-      <View style={styles.dot} />
-      <Text style={styles.label}>{statusLabel}</Text>
-    </View>
+      tone={status === 'done' ? 'success' : 'warning'}
+      variant="solid"
+    />
   );
 };

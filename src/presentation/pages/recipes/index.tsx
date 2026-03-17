@@ -1,5 +1,4 @@
 import { FlatList, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   computeRecipeStatus,
@@ -13,6 +12,7 @@ import { RecipeListHeader } from '@/presentation/components/recipe/recipe-list-h
 import { RecipeDetailOverlay } from '@/presentation/components/recipe/recipe-detail-overlay';
 import { RecipeListItem } from '@/presentation/components/recipe/recipe-list-item';
 import { RecipePaginationLoadingOverlay } from '@/presentation/components/recipe/recipe-pagination-loading-overlay';
+import { UiScreen } from '@/presentation/components/ui/screen';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useRequiredDependencies } from '@/presentation/hooks/useRequiredDependencies';
 import { useTheme } from '@/presentation/hooks/useTheme';
@@ -82,7 +82,7 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
         );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <UiScreen>
       <View style={styles.listViewport}>
         <FlatList
           contentContainerStyle={styles.content}
@@ -137,6 +137,6 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
           />
         ) : null}
       </View>
-    </SafeAreaView>
+    </UiScreen>
   );
 };

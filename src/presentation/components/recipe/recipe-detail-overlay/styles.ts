@@ -16,15 +16,6 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
       paddingTop: theme.spacing.lg,
       paddingBottom: theme.spacing.md,
     },
-    screenTitle: {
-      color: theme.colors.textMuted,
-      ...theme.typography.eyebrow,
-    },
-    recipeTitle: {
-      color: theme.colors.text,
-      textAlign: 'center',
-      ...theme.typography.recipeTitle,
-    },
     scrollContent: {
       gap: theme.spacing.xl,
       paddingHorizontal: theme.spacing.xl,
@@ -44,20 +35,8 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
     metaCard: {
       flexGrow: 1,
       flexBasis: '47%',
-      borderRadius: theme.radii.md,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      backgroundColor: theme.colors.surface,
       padding: theme.spacing.md,
       gap: theme.spacing.xs,
-    },
-    metaLabel: {
-      color: theme.colors.textMuted,
-      ...theme.typography.caption,
-    },
-    metaValue: {
-      color: theme.colors.text,
-      ...theme.typography.body,
     },
     section: {
       gap: theme.spacing.md,
@@ -67,14 +46,6 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: theme.spacing.md,
-    },
-    sectionTitle: {
-      color: theme.colors.text,
-      ...theme.typography.eyebrow,
-    },
-    helperText: {
-      color: theme.colors.textMuted,
-      ...theme.typography.caption,
     },
     ingredientsList: {
       gap: theme.spacing.sm,
@@ -93,25 +64,15 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
     },
     ingredientText: {
       flex: 1,
-      color: theme.colors.text,
-      ...theme.typography.body,
     },
     stepsList: {
       gap: theme.spacing.sm,
     },
     stepCard: {
-      borderRadius: theme.radii.md,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      backgroundColor: theme.colors.surface,
       padding: theme.spacing.md,
       flexDirection: 'row',
       alignItems: 'flex-start',
       gap: theme.spacing.md,
-      ...theme.shadows.card,
-    },
-    stepCardPressed: {
-      opacity: 0.88,
     },
     stepCardCompleted: {
       borderColor: theme.colors.statusDone,
@@ -142,26 +103,12 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
       flex: 1,
       gap: theme.spacing.xs,
     },
-    stepLabel: {
-      color: theme.colors.textMuted,
-      ...theme.typography.caption,
-    },
-    stepText: {
-      color: theme.colors.text,
-      ...theme.typography.body,
-    },
     stepTextCompleted: {
       color: theme.colors.textMuted,
       textDecorationLine: 'line-through',
     },
-    progressRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: theme.spacing.sm,
-    },
     errorMessage: {
       color: theme.colors.accent,
-      ...theme.typography.caption,
     },
     footer: {
       borderTopWidth: 1,
@@ -170,19 +117,5 @@ export const createRecipeDetailOverlayStyles = (theme: AppTheme) =>
       paddingTop: theme.spacing.md,
       paddingBottom: theme.spacing.xl,
       backgroundColor: theme.colors.background,
-    },
-    closeButton: {
-      borderRadius: theme.radii.md,
-      backgroundColor: theme.colors.accent,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: theme.spacing.md,
-    },
-    closeButtonPressed: {
-      opacity: 0.88,
-    },
-    closeButtonLabel: {
-      color: theme.colors.surface,
-      ...theme.typography.recipeTitle,
     },
   });

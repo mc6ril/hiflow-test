@@ -4,10 +4,6 @@ import type { AppTheme } from '@/shared/theme/appTheme';
 
 export const createRecipesPageStyles = (theme: AppTheme) =>
   StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
     listViewport: {
       flex: 1,
     },

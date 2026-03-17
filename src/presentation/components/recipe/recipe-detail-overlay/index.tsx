@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import type {
   Recipe,
@@ -7,6 +7,11 @@ import type {
   RecipeStatus,
 } from '@/core/domain/recipes';
 import { RecipeStatusBadge } from '@/presentation/components/recipe/recipe-status-badge';
+import { UiButton } from '@/presentation/components/ui/button';
+import { UiCard } from '@/presentation/components/ui/card';
+import { UiPressableCard } from '@/presentation/components/ui/pressable-card';
+import { UiText } from '@/presentation/components/ui/text';
+import { UiTitle } from '@/presentation/components/ui/title';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
@@ -34,14 +39,34 @@ export const RecipeDetailOverlay = ({
   const { t } = useI18n();
   const theme = useTheme();
   const styles = createRecipeDetailOverlayStyles(theme);
+  const metaItems = [
+    {
+      label: t('recipes.card.prepTimeLabel'),
+      value: `${recipe.prepTimeMinutes} mn`,
+    },
+    {
+      label: t('recipes.card.cookTimeLabel'),
+      value: `${recipe.cookTimeMinutes} mn`,
+    },
+    {
+      label: t('recipes.card.difficultyLabel'),
+      value: recipe.difficulty,
+    },
+    {
+      label: t('recipes.card.cuisineLabel'),
+      value: recipe.cuisine,
+    },
+  ];
 
   return (
     <View style={styles.overlay} testID="recipe-detail-overlay">
       <View style={styles.header}>
-        <Text style={styles.screenTitle}>{t('app.name')}</Text>
-        <Text style={styles.recipeTitle} testID="recipe-detail-title">
+        <UiText align="center" tone="muted" variant="eyebrow">
+          {t('app.name')}
+        </UiText>
+        <UiTitle align="center" level={3} testID="recipe-detail-title">
           {recipe.name}
-        </Text>
+        </UiTitle>
       </View>
 
       <ScrollView
@@ -56,30 +81,19 @@ export const RecipeDetailOverlay = ({
         />
 
         <View style={styles.metaGrid}>
-          <View style={styles.metaCard}>
-            <Text style={styles.metaLabel}>
-              {t('recipes.card.prepTimeLabel')}
-            </Text>
-            <Text style={styles.metaValue}>{recipe.prepTimeMinutes} mn</Text>
-          </View>
-          <View style={styles.metaCard}>
-            <Text style={styles.metaLabel}>
-              {t('recipes.card.cookTimeLabel')}
-            </Text>
-            <Text style={styles.metaValue}>{recipe.cookTimeMinutes} mn</Text>
-          </View>
-          <View style={styles.metaCard}>
-            <Text style={styles.metaLabel}>
-              {t('recipes.card.difficultyLabel')}
-            </Text>
-            <Text style={styles.metaValue}>{recipe.difficulty}</Text>
-          </View>
-          <View style={styles.metaCard}>
-            <Text style={styles.metaLabel}>
-              {t('recipes.card.cuisineLabel')}
-            </Text>
-            <Text style={styles.metaValue}>{recipe.cuisine}</Text>
-          </View>
+          {metaItems.map((item) => (
+            <UiCard
+              key={item.label}
+              padded={false}
+              radius="md"
+              style={styles.metaCard}
+            >
+              <UiText tone="muted" variant="caption">
+                {item.label}
+              </UiText>
+              <UiText>{item.value}</UiText>
+            </UiCard>
+          ))}
         </View>
 
         <RecipeStatusBadge
@@ -88,9 +102,9 @@ export const RecipeDetailOverlay = ({
         />
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+          <UiText variant="eyebrow" weight="semibold">
             {t('recipes.detail.ingredientsTitle')}
-          </Text>
+          </UiText>
           <View style={styles.ingredientsList}>
             {recipe.ingredients.map((ingredient, index) => (
               <View
@@ -98,7 +112,7 @@ export const RecipeDetailOverlay = ({
                 style={styles.ingredientRow}
               >
                 <View style={styles.ingredientBullet} />
-                <Text style={styles.ingredientText}>{ingredient}</Text>
+                <UiText style={styles.ingredientText}>{ingredient}</UiText>
               </View>
             ))}
           </View>
@@ -106,9 +120,9 @@ export const RecipeDetailOverlay = ({
 
         <View style={styles.section}>
           <View style={styles.sectionHeadingRow}>
-            <Text style={styles.sectionTitle}>
+            <UiText variant="eyebrow" weight="semibold">
               {t('recipes.detail.instructionsTitle')}
-            </Text>
+            </UiText>
           </View>
 
           <View style={styles.stepsList}>
@@ -117,16 +131,16 @@ export const RecipeDetailOverlay = ({
                 progress?.completedStepIndexes.includes(index) ?? false;
 
               return (
-                <Pressable
+                <UiPressableCard
                   disabled={isSavingProgress}
                   key={`${recipe.id}-instruction-${index}`}
                   onPress={() => {
                     onToggleInstructionStep(index);
                   }}
-                  style={({ pressed }) => [
+                  padded={false}
+                  style={[
                     styles.stepCard,
                     isCompleted ? styles.stepCardCompleted : null,
-                    pressed ? styles.stepCardPressed : null,
                   ]}
                   testID={`recipe-step-${index}`}
                 >
@@ -139,40 +153,36 @@ export const RecipeDetailOverlay = ({
                     {isCompleted ? <View style={styles.checkboxMark} /> : null}
                   </View>
                   <View style={styles.stepContent}>
-                    <Text style={styles.stepLabel}>
+                    <UiText tone="muted" variant="caption">
                       {t('recipes.detail.stepLabel')} {index + 1}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.stepText,
-                        isCompleted ? styles.stepTextCompleted : null,
-                      ]}
+                    </UiText>
+                    <UiText
+                      style={[isCompleted ? styles.stepTextCompleted : null]}
                     >
                       {instruction}
-                    </Text>
+                    </UiText>
                   </View>
-                </Pressable>
+                </UiPressableCard>
               );
             })}
           </View>
 
           {progressErrorMessage ? (
-            <Text style={styles.errorMessage}>{progressErrorMessage}</Text>
+            <UiText style={styles.errorMessage} variant="caption">
+              {progressErrorMessage}
+            </UiText>
           ) : null}
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
-        <Pressable
+        <UiButton
+          fullWidth
+          label={t('common.close')}
           onPress={onClose}
-          style={({ pressed }) => [
-            styles.closeButton,
-            pressed ? styles.closeButtonPressed : null,
-          ]}
+          size="lg"
           testID="recipe-detail-close"
-        >
-          <Text style={styles.closeButtonLabel}>{t('common.close')}</Text>
-        </Pressable>
+        />
       </View>
     </View>
   );

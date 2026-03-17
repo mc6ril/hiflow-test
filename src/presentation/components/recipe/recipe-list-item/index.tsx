@@ -1,8 +1,11 @@
 import { Image } from 'expo-image';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import type { Recipe, RecipeStatus } from '@/core/domain/recipes';
 import { RecipeStatusBadge } from '@/presentation/components/recipe/recipe-status-badge';
+import { UiPressableCard } from '@/presentation/components/ui/pressable-card';
+import { UiText } from '@/presentation/components/ui/text';
+import { UiTitle } from '@/presentation/components/ui/title';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
@@ -24,13 +27,9 @@ export const RecipeListItem = ({
   const styles = createRecipeListItemStyles(theme);
 
   return (
-    <Pressable
+    <UiPressableCard
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.container,
-        pressed ? styles.containerPressed : null,
-      ]}
       testID={`recipe-card-${recipe.id}`}
     >
       <View style={styles.row}>
@@ -41,22 +40,22 @@ export const RecipeListItem = ({
           transition={120}
         />
         <View style={styles.content}>
-          <Text numberOfLines={1} style={styles.title}>
+          <UiTitle isHeader={false} level={3} numberOfLines={1}>
             {recipe.name}
-          </Text>
-          <Text numberOfLines={1} style={styles.meta}>
+          </UiTitle>
+          <UiText numberOfLines={1} tone="muted" variant="caption">
             {t('recipes.card.prepTimeLabel')}: {recipe.prepTimeMinutes}mn |{' '}
             {t('recipes.card.cookTimeLabel')}: {recipe.cookTimeMinutes}mn
-          </Text>
-          <Text numberOfLines={1} style={styles.meta}>
+          </UiText>
+          <UiText numberOfLines={1} tone="muted" variant="caption">
             {t('recipes.card.difficultyLabel')}: {recipe.difficulty}
-          </Text>
-          <Text numberOfLines={1} style={styles.meta}>
+          </UiText>
+          <UiText numberOfLines={1} tone="muted" variant="caption">
             {t('recipes.card.cuisineLabel')}: {recipe.cuisine}
-          </Text>
+          </UiText>
           <RecipeStatusBadge status={status} />
         </View>
       </View>
-    </Pressable>
+    </UiPressableCard>
   );
 };

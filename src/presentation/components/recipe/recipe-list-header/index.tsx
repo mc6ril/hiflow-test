@@ -1,6 +1,7 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { SearchInput } from '@/presentation/components/form/search-input';
+import { UiTitle } from '@/presentation/components/ui/title';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
@@ -23,7 +24,7 @@ export const RecipeListHeader = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('app.name')}</Text>
+      <UiTitle align="center">{t('app.name')}</UiTitle>
       <SearchInput
         accessibilityLabel={t('recipes.search.accessibilityLabel')}
         isLoading={isSearchLoading}
