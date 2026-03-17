@@ -1,21 +1,22 @@
-import { createContext, type PropsWithChildren, type ReactNode } from 'react';
+import { createContext, type ReactNode } from 'react';
 import type { AppDependencies } from '@/app/createAppDependencies';
 
 export const AppDependenciesContext = createContext<AppDependencies | null>(
   null,
 );
 
-type AppDependenciesProviderProps = PropsWithChildren<{
+type AppDependenciesProviderProps = {
   dependencies: AppDependencies;
-}>;
+  children: ReactNode;
+};
 
-export function AppDependenciesProvider({
+export const AppDependenciesProvider = ({
   dependencies,
   children,
-}: AppDependenciesProviderProps): ReactNode {
+}: AppDependenciesProviderProps) => {
   return (
     <AppDependenciesContext.Provider value={dependencies}>
       {children}
     </AppDependenciesContext.Provider>
   );
-}
+};

@@ -11,10 +11,10 @@ type StartupFallbackPageProps = {
   onRetry: () => void;
 };
 
-export function StartupFallbackPage({
+export const StartupFallbackPage = ({
   message,
   onRetry,
-}: StartupFallbackPageProps) {
+}: StartupFallbackPageProps) => {
   const { t } = useI18n();
   const theme = useTheme();
   const styles = createStartupFallbackPageStyles(theme);
@@ -31,4 +31,4 @@ export function StartupFallbackPage({
       </View>
     </SafeAreaView>
   );
-}
+};

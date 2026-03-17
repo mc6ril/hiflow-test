@@ -12,12 +12,12 @@ type BootstrapCardProps = {
   title: string;
 };
 
-export function BootstrapCard({
+export const BootstrapCard = ({
   eyebrow,
   imageSource,
   subtitle,
   title,
-}: BootstrapCardProps) {
+}: BootstrapCardProps) => {
   const theme = useTheme();
   const styles = createBootstrapCardStyles(theme);
 
@@ -31,4 +31,4 @@ export function BootstrapCard({
       </View>
     </View>
   );
-}
+};

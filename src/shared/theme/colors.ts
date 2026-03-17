@@ -7,4 +7,6 @@ export const colors = Object.freeze({
   border: '#D6DFEA',
   accent: '#FF6B35',
   accentSoft: '#FFE5DC',
+  statusDone: '#7AD45A',
+  statusInProgress: '#FF8A50',
 });
