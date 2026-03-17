@@ -10,13 +10,15 @@ import type { AppStartupSnapshot } from '@/core/usecases/startApp';
 import { RecipeListEmptyState } from '@/presentation/components/recipe/recipe-list-empty-state';
 import { RecipeListFooter } from '@/presentation/components/recipe/recipe-list-footer';
 import { RecipeListHeader } from '@/presentation/components/recipe/recipe-list-header';
+import { RecipeDetailOverlay } from '@/presentation/components/recipe/recipe-detail-overlay';
 import { RecipeListItem } from '@/presentation/components/recipe/recipe-list-item';
 import { RecipePaginationLoadingOverlay } from '@/presentation/components/recipe/recipe-pagination-loading-overlay';
+import { useI18n } from '@/presentation/hooks/useI18n';
 import { useRequiredDependencies } from '@/presentation/hooks/useRequiredDependencies';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
 import { createRecipesPageStyles } from './styles';
-import { useRecipesPageState } from '@/presentation/hooks/recipes/useRecipesPageState';
+import { useRecipesPageController } from '@/presentation/hooks/recipes/useRecipesPageController';
 
 type RecipesPageProps = {
   snapshot: AppStartupSnapshot;
@@ -24,35 +26,60 @@ type RecipesPageProps = {
 
 export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
   const { recipesRepository } = useRequiredDependencies();
+  const { t } = useI18n();
   const theme = useTheme();
   const styles = createRecipesPageStyles(theme);
   const {
     emptyStateMessageKey,
+    handleCloseRecipeDetails,
     handleContentSizeChange,
     handleEndReached,
     handleListLayout,
+    handleOpenRecipeDetails,
     handleRetryPagination,
     handleScroll,
+    handleToggleInstructionStep,
     handleUserInteraction,
     hasMoreRecipes,
+    isRecipeProgressSaving,
     isSearchLoading,
     paginationStatus,
+    progressById,
     recipesPage,
     searchQuery,
+    selectedRecipe,
+    selectedRecipeProgress,
+    selectedRecipeProgressErrorMessageKey,
     setSearchQuery,
-  } = useRecipesPageState({
+  } = useRecipesPageController({
     recipesRepository,
     snapshot,
   });
 
   const renderRecipeItem = ({ item }: { item: Recipe }) => {
     const status = computeRecipeStatus(
-      snapshot.progressById[toRecipeProgressKey(item.id)],
+      progressById[toRecipeProgressKey(item.id)],
       item.instructions.length,
     );
 
-    return <RecipeListItem recipe={item} status={status} />;
+    return (
+      <RecipeListItem
+        onPress={() => {
+          handleOpenRecipeDetails(item);
+        }}
+        recipe={item}
+        status={status}
+      />
+    );
   };
+
+  const selectedRecipeStatus =
+    selectedRecipe === null
+      ? null
+      : computeRecipeStatus(
+          selectedRecipeProgress,
+          selectedRecipe.instructions.length,
+        );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -93,6 +120,21 @@ export const RecipesPage = ({ snapshot }: RecipesPageProps) => {
         />
         {paginationStatus === 'loading' ? (
           <RecipePaginationLoadingOverlay />
+        ) : null}
+        {selectedRecipe !== null && selectedRecipeStatus !== null ? (
+          <RecipeDetailOverlay
+            isSavingProgress={isRecipeProgressSaving}
+            onClose={handleCloseRecipeDetails}
+            onToggleInstructionStep={handleToggleInstructionStep}
+            progress={selectedRecipeProgress}
+            progressErrorMessage={
+              selectedRecipeProgressErrorMessageKey === null
+                ? null
+                : t(selectedRecipeProgressErrorMessageKey)
+            }
+            recipe={selectedRecipe}
+            status={selectedRecipeStatus}
+          />
         ) : null}
       </View>
     </SafeAreaView>

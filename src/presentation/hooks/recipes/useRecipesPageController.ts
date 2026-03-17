@@ -7,21 +7,22 @@ import type { AppStartupSnapshot } from '@/core/usecases/startApp';
 import type { TranslationKey } from '@/shared/i18n/types';
 
 import { useRecipesPagination } from '@/presentation/hooks/recipes/useRecipesPagination';
-import { UseRecipesPageStateResult } from './types';
+import { useRecipesProgress } from '@/presentation/hooks/recipes/useRecipesProgress';
+import type { UseRecipesPageControllerResult } from './types';
 import { createEmptyRecipesPage, loadRecipesPage } from './utils';
 
 const EMPTY_SEARCH_QUERY = '';
 const SEARCH_DEBOUNCE_DELAY_MS = 300;
 
-type UseRecipesPageStateParams = {
+type UseRecipesPageControllerParams = {
   recipesRepository: RecipesRepository;
   snapshot: AppStartupSnapshot;
 };
 
-export const useRecipesPageState = ({
+export const useRecipesPageController = ({
   recipesRepository,
   snapshot,
-}: UseRecipesPageStateParams): UseRecipesPageStateResult => {
+}: UseRecipesPageControllerParams): UseRecipesPageControllerResult => {
   const [searchQuery, setSearchQuery] = useState(EMPTY_SEARCH_QUERY);
   const [debouncedSearchQuery, setDebouncedSearchQuery] =
     useState(EMPTY_SEARCH_QUERY);
@@ -48,6 +49,10 @@ export const useRecipesPageState = ({
     loadPage: (params) =>
       loadRecipesPage(recipesRepository, debouncedSearchQuery, params),
     sourceKey: debouncedSearchQuery,
+  });
+  const recipesProgress = useRecipesProgress({
+    initialProgressById: snapshot.progressById,
+    recipesRepository,
   });
 
   useEffect(() => {
@@ -159,5 +164,6 @@ export const useRecipesPageState = ({
     recipesPage,
     searchQuery,
     setSearchQuery,
+    ...recipesProgress,
   };
 };
