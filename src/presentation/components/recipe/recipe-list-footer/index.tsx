@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 
+import type { RequestStatus } from '@/core/domain/requestStatus';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
@@ -8,7 +9,7 @@ import { createRecipeListFooterStyles } from './styles';
 type RecipeListFooterProps = {
   hasMoreRecipes: boolean;
   onRetry: () => void;
-  paginationStatus: 'idle' | 'loading' | 'error';
+  paginationStatus: RequestStatus;
 };
 
 export const RecipeListFooter = ({

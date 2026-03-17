@@ -48,6 +48,6 @@ export const createStartupFallbackPageStyles = (theme: AppTheme) =>
     },
     buttonLabel: {
       color: theme.colors.surface,
-      ...theme.typography.buttonLabel,
+      ...theme.typography.body,
     },
   });

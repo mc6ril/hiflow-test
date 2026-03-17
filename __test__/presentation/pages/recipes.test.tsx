@@ -4,8 +4,7 @@ import { FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import type { AppDependencies } from '@/app/createAppDependencies';
-import { createFailure } from '@/core/domain/failures';
-import { failure, success } from '@/core/domain/result';
+import { createFailure, failure, success } from '@/core/domain/result';
 import type { Recipe } from '@/core/domain/recipes';
 import type { RecipesRepository } from '@/core/ports/recipesRepository';
 import type { AppStartupSnapshot } from '@/core/usecases/startApp';
@@ -27,10 +26,10 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
-const createRecipe = (id: number): Recipe =>
+const createRecipe = (id: number, name = `Recipe ${id}`): Recipe =>
   Object.freeze({
     id,
-    name: `Recipe ${id}`,
+    name,
     image: `https://example.com/recipes/${id}.jpg`,
     prepTimeMinutes: 10,
     cookTimeMinutes: 20,
@@ -223,5 +222,123 @@ describe('RecipesPage', () => {
     expect(
       screen.queryByText('Impossible de charger plus de recettes.'),
     ).toBeNull();
+  });
+
+  it('searches recipes and replaces the visible list with matching results', async () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12);
+
+    repository.search.mockResolvedValueOnce(
+      success({
+        items: [createRecipe(42, 'Pizza Primavera')],
+        total: 1,
+        skip: 0,
+        limit: 5,
+      }),
+    );
+
+    const screen = renderRecipesPage(repository, snapshot);
+
+    fireEvent.changeText(screen.getByTestId('recipes-search-input'), 'Pizza');
+
+    await waitFor(() => {
+      expect(repository.search).toHaveBeenCalledWith({
+        query: 'Pizza',
+        limit: 5,
+        skip: 0,
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Pizza Primavera')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Recipe 1')).toBeNull();
+    expect(screen.queryByText('Recipe 5')).toBeNull();
+  });
+
+  it('loads the next page with the active search query when the list is filtered', async () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12);
+
+    repository.search
+      .mockResolvedValueOnce(
+        success({
+          items: createRecipes(5, 20),
+          total: 8,
+          skip: 0,
+          limit: 5,
+        }),
+      )
+      .mockResolvedValueOnce(
+        success({
+          items: createRecipes(3, 25),
+          total: 8,
+          skip: 5,
+          limit: 5,
+        }),
+      );
+
+    const screen = renderRecipesPage(repository, snapshot);
+
+    fireEvent.changeText(screen.getByTestId('recipes-search-input'), 'Soup');
+
+    await waitFor(() => {
+      expect(repository.search).toHaveBeenNthCalledWith(1, {
+        query: 'Soup',
+        limit: 5,
+        skip: 0,
+      });
+    });
+
+    const list = screen.getByTestId('recipes-list').props as ComponentProps<
+      typeof FlatList
+    >;
+
+    triggerPagination(list);
+
+    await waitFor(() => {
+      expect(repository.search).toHaveBeenNthCalledWith(2, {
+        query: 'Soup',
+        limit: 5,
+        skip: 5,
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Recipe 27')).toBeTruthy();
+    });
+  });
+
+  it('restores the locally loaded list when the search query is cleared', async () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12);
+
+    repository.search.mockResolvedValueOnce(
+      success({
+        items: [createRecipe(77, 'Veloute de champignons')],
+        total: 1,
+        skip: 0,
+        limit: 5,
+      }),
+    );
+
+    const screen = renderRecipesPage(repository, snapshot);
+    const searchInput = screen.getByTestId('recipes-search-input');
+
+    fireEvent.changeText(searchInput, 'Soupe');
+
+    await waitFor(() => {
+      expect(screen.getByText('Veloute de champignons')).toBeTruthy();
+    });
+
+    fireEvent.changeText(searchInput, '');
+
+    await waitFor(() => {
+      expect(screen.getByText('Recipe 1')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Veloute de champignons')).toBeNull();
+    expect(repository.list).not.toHaveBeenCalled();
   });
 });
