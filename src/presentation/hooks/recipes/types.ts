@@ -4,9 +4,14 @@ import type {
   NativeSyntheticEvent,
 } from 'react-native';
 
-import type { PaginatedRecipes } from '@/core/domain/recipes';
+import type {
+  PaginatedRecipes,
+  Recipe,
+  RecipeProgress,
+  RecipeProgressById,
+} from '@/core/domain/recipes';
 import type { RequestStatus } from '@/core/domain/requestStatus';
-import { TranslationKey } from '@/shared/i18n/types';
+import type { TranslationKey } from '@/shared/i18n/types';
 
 export type RecipesListInteractions = {
   handleContentSizeChange: (_width: number, height: number) => void;
@@ -23,12 +28,24 @@ export type RecipesPaginationState = RecipesListInteractions & {
   recipesPage: PaginatedRecipes;
 };
 
-export type UseRecipesPageStateResult = RecipesPaginationState & {
-  emptyStateMessageKey: TranslationKey;
-  isSearchLoading: boolean;
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
+export type RecipesProgressState = {
+  handleCloseRecipeDetails: () => void;
+  handleOpenRecipeDetails: (recipe: Recipe) => void;
+  handleToggleInstructionStep: (stepIndex: number) => void;
+  isRecipeProgressSaving: boolean;
+  progressById: RecipeProgressById;
+  selectedRecipe: Recipe | null;
+  selectedRecipeProgress: RecipeProgress | null;
+  selectedRecipeProgressErrorMessageKey: TranslationKey | null;
 };
+
+export type UseRecipesPageControllerResult = RecipesPaginationState &
+  RecipesProgressState & {
+    emptyStateMessageKey: TranslationKey;
+    isSearchLoading: boolean;
+    searchQuery: string;
+    setSearchQuery: (value: string) => void;
+  };
 
 export type UseRecipesPaginationResult = RecipesPaginationState & {
   replaceRecipesPage: (page: PaginatedRecipes) => void;

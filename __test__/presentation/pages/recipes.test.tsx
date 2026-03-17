@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import type { AppDependencies } from '@/app/createAppDependencies';
 import { createFailure, failure, success } from '@/core/domain/result';
-import type { Recipe } from '@/core/domain/recipes';
+import { toRecipeProgressKey, type Recipe } from '@/core/domain/recipes';
 import type { RecipesRepository } from '@/core/ports/recipesRepository';
 import type { AppStartupSnapshot } from '@/core/usecases/startApp';
 import { RecipesPage } from '@/presentation/pages/recipes';
@@ -46,9 +46,10 @@ const createRecipes = (count: number, startId = 1): Recipe[] =>
 const createSnapshot = (
   items: Recipe[],
   total = items.length,
+  progressById: AppStartupSnapshot['progressById'] = {},
 ): AppStartupSnapshot =>
   Object.freeze({
-    progressById: {},
+    progressById,
     recipesPage: Object.freeze({
       items,
       total,
@@ -340,5 +341,79 @@ describe('RecipesPage', () => {
 
     expect(screen.queryByText('Veloute de champignons')).toBeNull();
     expect(repository.list).not.toHaveBeenCalled();
+  });
+
+  it('opens the selected recipe details and closes them from the overlay', () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12);
+
+    const screen = renderRecipesPage(repository, snapshot);
+
+    fireEvent.press(screen.getByTestId('recipe-card-1'));
+
+    expect(screen.getByTestId('recipe-detail-overlay')).toBeTruthy();
+    expect(screen.getByTestId('recipe-detail-title')).toBeTruthy();
+    expect(screen.getByText('Ingredient')).toBeTruthy();
+    expect(screen.getByText('Step 1')).toBeTruthy();
+
+    fireEvent.press(screen.getByTestId('recipe-detail-close'));
+
+    expect(screen.queryByTestId('recipe-detail-overlay')).toBeNull();
+  });
+
+  it('toggles a recipe step from the detail overlay and refreshes the recipe status in the list', async () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12);
+
+    repository.saveProgress.mockResolvedValueOnce(success(undefined));
+
+    const screen = renderRecipesPage(repository, snapshot);
+
+    fireEvent.press(screen.getByTestId('recipe-card-1'));
+    fireEvent.press(screen.getByTestId('recipe-step-0'));
+
+    await waitFor(() => {
+      expect(repository.saveProgress).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipeId: 1,
+          completedStepIndexes: [0],
+        }),
+      );
+    });
+
+    fireEvent.press(screen.getByTestId('recipe-detail-close'));
+
+    expect(screen.getByText('En cours')).toBeTruthy();
+  });
+
+  it('keeps the current detail open and shows a local error when progress saving fails', async () => {
+    const repository = createRepository();
+    const snapshot = createSnapshot(createRecipes(5), 12, {
+      [toRecipeProgressKey(1)]: {
+        recipeId: 1,
+        completedStepIndexes: [],
+        updatedAt: '2026-03-17T00:00:00.000Z',
+      },
+    });
+
+    repository.saveProgress.mockResolvedValueOnce(
+      failure(createFailure('storage', 'Unable to save recipe progress.')),
+    );
+
+    const screen = renderRecipesPage(repository, snapshot);
+
+    fireEvent.press(screen.getByTestId('recipe-card-1'));
+    fireEvent.press(screen.getByTestId('recipe-step-0'));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "Impossible d'enregistrer votre progression pour le moment.",
+        ),
+      ).toBeTruthy();
+    });
+
+    expect(screen.getByTestId('recipe-detail-overlay')).toBeTruthy();
+    expect(screen.queryByText('En cours')).toBeNull();
   });
 });

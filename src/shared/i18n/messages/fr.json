@@ -29,6 +29,12 @@
       "difficultyLabel": "Difficulté",
       "cuisineLabel": "Cuisine"
     },
+    "detail": {
+      "ingredientsTitle": "Ingrédients",
+      "instructionsTitle": "Instructions",
+      "progressError": "Impossible d'enregistrer votre progression pour le moment.",
+      "stepLabel": "Étape"
+    },
     "status": {
       "notStarted": "À faire",
       "inProgress": "En cours",

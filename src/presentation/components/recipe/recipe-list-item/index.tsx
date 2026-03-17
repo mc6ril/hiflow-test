@@ -1,31 +1,38 @@
 import { Image } from 'expo-image';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import type { Recipe, RecipeStatus } from '@/core/domain/recipes';
+import { RecipeStatusBadge } from '@/presentation/components/recipe/recipe-status-badge';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
 
 import { createRecipeListItemStyles } from './styles';
 
 type RecipeListItemProps = {
+  onPress: () => void;
   recipe: Recipe;
   status: RecipeStatus;
 };
 
-export const RecipeListItem = ({ recipe, status }: RecipeListItemProps) => {
+export const RecipeListItem = ({
+  onPress,
+  recipe,
+  status,
+}: RecipeListItemProps) => {
   const { t } = useI18n();
   const theme = useTheme();
   const styles = createRecipeListItemStyles(theme);
 
-  const statusLabel =
-    status === 'done'
-      ? t('recipes.status.done')
-      : status === 'in_progress'
-        ? t('recipes.status.inProgress')
-        : '';
-
   return (
-    <View style={styles.container}>
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.container,
+        pressed ? styles.containerPressed : null,
+      ]}
+      testID={`recipe-card-${recipe.id}`}
+    >
       <View style={styles.row}>
         <Image
           contentFit="cover"
@@ -47,21 +54,9 @@ export const RecipeListItem = ({ recipe, status }: RecipeListItemProps) => {
           <Text numberOfLines={1} style={styles.meta}>
             {t('recipes.card.cuisineLabel')}: {recipe.cuisine}
           </Text>
-          {status === 'not_started' ? null : (
-            <View
-              style={[
-                styles.statusBadge,
-                status === 'done'
-                  ? styles.statusBadgeDone
-                  : styles.statusBadgeInProgress,
-              ]}
-            >
-              <View style={styles.statusDot} />
-              <Text style={styles.statusLabel}>{statusLabel}</Text>
-            </View>
-          )}
+          <RecipeStatusBadge status={status} />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
