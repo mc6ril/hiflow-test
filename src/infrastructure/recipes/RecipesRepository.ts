@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { createFailure } from '@/core/domain/failures';
 import type {
   ListRecipesParams,
   PaginatedRecipes,
@@ -8,7 +7,12 @@ import type {
   SearchRecipesParams,
 } from '@/core/domain/recipes';
 import { toRecipeProgressKey } from '@/core/domain/recipes';
-import { failure, success, type Result } from '@/core/domain/result';
+import {
+  createFailure,
+  failure,
+  success,
+  type Result,
+} from '@/core/domain/result';
 import type { RecipesRepository } from '@/core/ports/recipesRepository';
 
 import {

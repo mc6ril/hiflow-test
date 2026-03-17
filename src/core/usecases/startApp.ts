@@ -1,5 +1,9 @@
-import { unexpectedFailure } from '@/core/domain/failures';
-import { failure, success, type Result } from '@/core/domain/result';
+import {
+  failure,
+  success,
+  type Result,
+  unexpectedFailure,
+} from '@/core/domain/result';
 import type {
   ListRecipesParams,
   PaginatedRecipes,

@@ -14,12 +14,15 @@
     "errorSubtitle": "Le premier chargement a échoué. Vous pouvez réessayer."
   },
   "recipes": {
-    "subtitle": "Découvrez les recettes DummyJSON. Faites défiler la liste pour charger 5 recettes à la fois.",
-    "loaded": "Recettes chargées",
-    "restoredProgress": "Progressions restaurées",
     "empty": "Aucune recette disponible pour le moment.",
     "paginationLoading": "Chargement de nouvelles recettes...",
     "paginationError": "Impossible de charger plus de recettes.",
+    "search": {
+      "placeholder": "Rechercher une recette",
+      "accessibilityLabel": "Recherche de recette",
+      "empty": "Aucune recette ne correspond à votre recherche.",
+      "error": "Impossible d'effectuer la recherche pour le moment."
+    },
     "card": {
       "prepTimeLabel": "préparation",
       "cookTimeLabel": "cuisson",

@@ -1,6 +1,5 @@
-import { createFailure } from '@/core/domain/failures';
 import type { RecipesRepository } from '@/core/ports/recipesRepository';
-import { failure, success } from '@/core/domain/result';
+import { createFailure, failure, success } from '@/core/domain/result';
 import { startApp } from '@/core/usecases/startApp';
 
 describe('startApp', () => {
