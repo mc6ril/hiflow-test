@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "My Recipes"
+  },
+  "common": {
+    "close": "Close",
+    "loading": "Loading...",
+    "retry": "Retry"
+  },
+  "startup": {
+    "title": "Initialization",
+    "subtitle": "Loading local progress and the first page of recipes.",
+    "errorTitle": "Unable to start the application",
+    "errorSubtitle": "The initial load failed. You can try again.",
+    "unexpectedErrorMessage": "An unexpected error occurred. You can restart the application."
+  },
+  "recipes": {
+    "empty": "No recipes available at the moment.",
+    "paginationLoading": "Loading more recipes...",
+    "paginationError": "Unable to load more recipes.",
+    "search": {
+      "placeholder": "Search for a recipe",
+      "accessibilityLabel": "Recipe search",
+      "empty": "No recipes match your search.",
+      "error": "Unable to search right now."
+    },
+    "card": {
+      "prepTimeLabel": "prep",
+      "cookTimeLabel": "cook",
+      "difficultyLabel": "Difficulty",
+      "cuisineLabel": "Cuisine"
+    },
+    "detail": {
+      "ingredientsTitle": "Ingredients",
+      "instructionsTitle": "Instructions",
+      "progressError": "Unable to save your progress right now.",
+      "stepLabel": "Step"
+    },
+    "status": {
+      "notStarted": "To do",
+      "inProgress": "In progress",
+      "done": "Done"
+    }
+  }
+}
