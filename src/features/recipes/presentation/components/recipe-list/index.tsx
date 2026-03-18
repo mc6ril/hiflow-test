@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 
 import type { Recipe } from '@/features/recipes/domain/recipes';
 import { RecipeListEmptyState } from '@/features/recipes/presentation/components/recipe-list-empty-state';
@@ -7,12 +7,12 @@ import { RecipeListHeader } from '@/features/recipes/presentation/components/rec
 import { RecipeListItem } from '@/features/recipes/presentation/components/recipe-list-item';
 import type { RecipesListInteractions } from '@/features/recipes/presentation/hooks/interactionTypes';
 import type { RecipeListItemViewModel } from '@/features/recipes/presentation/hooks/types';
-import type { AppTheme } from '@/presentation/theme/appTheme';
 import { useTheme } from '@/presentation/hooks/useTheme';
 import type { RequestStatus } from '@/shared/domain/requestStatus';
 import type { TranslationKey } from '@/shared/i18n/types';
 
-import { createStyles } from './layout';
+import { createLayoutStyles } from './layout';
+import { createStyles } from './styles';
 
 type RecipeListProps = RecipesListInteractions & {
   emptyStateMessageKey: TranslationKey;
@@ -24,15 +24,6 @@ type RecipeListProps = RecipesListInteractions & {
   searchQuery: string;
   setSearchQuery: (value: string) => void;
 };
-
-const createRecipeListStyles = (theme: AppTheme) =>
-  StyleSheet.create({
-    content: {
-      gap: theme.spacing.md,
-      padding: theme.spacing.xl,
-      paddingBottom: theme.spacing.xxl * 2,
-    },
-  });
 
 export const RecipeList = ({
   emptyStateMessageKey,
@@ -51,7 +42,7 @@ export const RecipeList = ({
   setSearchQuery,
 }: RecipeListProps) => {
   const theme = useTheme();
-  const styles = createRecipeListStyles(theme);
+  const styles = createStyles(theme);
 
   return (
     <FlatList
@@ -77,7 +68,7 @@ export const RecipeList = ({
           <RecipeListEmptyState messageKey={emptyStateMessageKey} />
         )
       }
-      getItemLayout={(_data, index) => createStyles(theme, index)}
+      getItemLayout={(_data, index) => createLayoutStyles(theme, index)}
       initialNumToRender={6}
       maxToRenderPerBatch={6}
       onContentSizeChange={handleContentSizeChange}

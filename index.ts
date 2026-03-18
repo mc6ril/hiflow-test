@@ -3,7 +3,6 @@ import { registerRootComponent } from 'expo';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { createAppDependencies } from '@/app/createAppDependencies';
-import { appTheme } from '@/presentation/theme/appTheme';
 import App from './App';
 
 // Keep the native splash visible until our first meaningful React tree is painted.
@@ -14,7 +13,6 @@ const dependencies = createAppDependencies();
 const Root = () => {
   return createElement(App, {
     dependencies,
-    theme: appTheme,
   });
 };
 

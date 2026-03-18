@@ -1,5 +1,6 @@
 import { createI18n } from '@/shared/i18n/createI18n';
 import type { I18n } from '@/shared/i18n/types';
+import { appTheme, type AppTheme } from '@/presentation/theme/appTheme';
 import type {
   PaginatedRecipes,
   RecipeProgress,
@@ -38,6 +39,7 @@ export type AppDependencies = {
     allPages: PaginatedRecipes[],
   ) => number | undefined;
   i18n: I18n;
+  theme: AppTheme;
   loadRecipesPage: (
     params: LoadRecipesPageParams,
     options?: {
@@ -62,6 +64,7 @@ export const createAppDependencies = (): AppDependencies => {
     flattenRecipesPages,
     getNextRecipesPageOffset,
     i18n: createI18n(),
+    theme: appTheme,
     loadRecipesPage: (params, options) =>
       loadRecipesPage(recipesRepository, params, options),
     previewInstructionStepToggle,

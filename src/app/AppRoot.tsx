@@ -1,22 +1,20 @@
 import type { AppDependencies } from '@/app/createAppDependencies';
 import * as SplashScreen from 'expo-splash-screen';
+import { ErrorBoundary } from 'react-error-boundary';
 import { type ReactNode, useCallback, useRef } from 'react';
 import { View } from 'react-native';
 
 import { AppLayout } from '@/app/AppLayout';
-import { AppErrorBoundary } from '@/app/AppErrorBoundary';
 import { RecipesPage } from '@/features/recipes/presentation/pages/recipes';
 import { useRecipesStartup } from '@/features/recipes/presentation/hooks/useRecipesStartup';
 import { InitPage } from '@/presentation/pages/init';
 import { StartupFallbackPage } from '@/presentation/pages/startup-fallback';
-import type { AppTheme } from '@/presentation/theme/appTheme';
 
 type AppRootProps = {
   dependencies: AppDependencies;
-  theme: AppTheme;
 };
 
-export const AppRoot = ({ dependencies, theme }: AppRootProps) => {
+export const AppRoot = ({ dependencies }: AppRootProps) => {
   const { handleRetryStartup, startupAttempt, startupState } =
     useRecipesStartup({
       startApp: dependencies.startApp,
@@ -50,21 +48,20 @@ export const AppRoot = ({ dependencies, theme }: AppRootProps) => {
     <AppLayout
       dependencies={{
         i18n: dependencies.i18n,
-        theme,
+        theme: dependencies.theme,
       }}
     >
-      <AppErrorBoundary
-        // Any unexpected render/runtime error during startup falls back to a retryable page.
-        fallback={() =>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) =>
           renderStartupContent(
             <StartupFallbackPage
               message={dependencies.i18n.t('startup.unexpectedErrorMessage')}
-              onRetry={handleRetryStartup}
+              onRetry={resetErrorBoundary}
             />,
           )
         }
-        // Retry increments startupAttempt, forcing the boundary state to reset.
-        resetKey={startupAttempt}
+        onReset={handleRetryStartup}
+        resetKeys={[startupAttempt]}
       >
         {/* ready: app initialized, error: recoverable startup failure, else: initialization in progress */}
         {startupState.status === 'ready' ? (
@@ -93,7 +90,7 @@ export const AppRoot = ({ dependencies, theme }: AppRootProps) => {
         ) : (
           <InitPage />
         )}
-      </AppErrorBoundary>
+      </ErrorBoundary>
     </AppLayout>
   );
 };

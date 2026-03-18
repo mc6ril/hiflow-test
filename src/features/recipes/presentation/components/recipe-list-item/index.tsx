@@ -10,6 +10,7 @@ import { UiText } from '@/presentation/components/ui/text';
 import { UiTitle } from '@/presentation/components/ui/title';
 import { useI18n } from '@/presentation/hooks/useI18n';
 import { useTheme } from '@/presentation/hooks/useTheme';
+import type { TranslationKey } from '@/shared/i18n/types';
 
 import { createStyles } from './styles';
 
@@ -20,6 +21,13 @@ type RecipeListItemProps = {
   recipe: Recipe;
   status: RecipeStatus;
 };
+
+const STATUS_TRANSLATION_KEY_BY_STATUS: Record<RecipeStatus, TranslationKey> =
+  Object.freeze({
+    done: 'recipes.status.done',
+    in_progress: 'recipes.status.inProgress',
+    not_started: 'recipes.status.notStarted',
+  });
 
 export const RecipeListItem = memo(
   ({
@@ -32,21 +40,17 @@ export const RecipeListItem = memo(
     const { t } = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
-    const statusLabel =
-      status === 'done'
-        ? t('recipes.status.done')
-        : status === 'in_progress'
-          ? t('recipes.status.inProgress')
-          : t('recipes.status.notStarted');
+    const statusLabel = t(STATUS_TRANSLATION_KEY_BY_STATUS[status]);
+    const defaultRecipeAccessibilityLabel = [
+      recipe.name,
+      `${t('recipes.card.prepTimeLabel')}: ${recipe.prepTimeMinutes}mn`,
+      `${t('recipes.card.cookTimeLabel')}: ${recipe.cookTimeMinutes}mn`,
+      `${t('recipes.card.difficultyLabel')}: ${recipe.difficulty}`,
+      `${t('recipes.card.cuisineLabel')}: ${recipe.cuisine}`,
+      statusLabel,
+    ].join('. ');
     const recipeAccessibilityLabel =
-      accessibilityLabel ??
-      `${recipe.name}. ${t('recipes.card.prepTimeLabel')}: ${
-        recipe.prepTimeMinutes
-      }mn. ${t('recipes.card.cookTimeLabel')}: ${recipe.cookTimeMinutes}mn. ${t(
-        'recipes.card.difficultyLabel',
-      )}: ${recipe.difficulty}. ${t('recipes.card.cuisineLabel')}: ${
-        recipe.cuisine
-      }. ${statusLabel}.`;
+      accessibilityLabel ?? `${defaultRecipeAccessibilityLabel}.`;
 
     return (
       <UiPressableCard

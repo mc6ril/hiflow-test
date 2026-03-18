@@ -15,6 +15,7 @@ export const useRecipesSearch = (): UseRecipesSearchResult => {
   const [searchQuery, setSearchQuery] = useState(EMPTY_SEARCH_QUERY);
   const [debouncedSearchQuery, setDebouncedSearchQuery] =
     useState(EMPTY_SEARCH_QUERY);
+
   const normalizedSearchQuery = searchQuery.trim();
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 

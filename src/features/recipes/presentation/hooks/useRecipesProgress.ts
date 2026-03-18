@@ -31,6 +31,7 @@ export const useRecipesProgress = ({
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [recipeProgressMutationStatus, setRecipeProgressMutationStatus] =
     useState<RequestStatus>('idle');
+
   const progressStateVersionRef = useRef(0);
   const selectedRecipeIdRef = useRef<number | null>(null);
 
