@@ -164,6 +164,7 @@ export const useRecipesPageController = ({
     toRecipeProgressKey,
     toggleInstructionStep,
   });
+
   const recipes = useMemo(() => {
     return recipesPage.items.map((recipe) =>
       Object.freeze({
@@ -180,6 +181,7 @@ export const useRecipesPageController = ({
     recipesProgress.progressById,
     toRecipeProgressKey,
   ]);
+
   const selectedRecipeStatus =
     recipesProgress.selectedRecipe === null
       ? null

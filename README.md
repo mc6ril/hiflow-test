@@ -61,7 +61,6 @@ Ce decoupage permet d'ajouter une nouvelle feature sans recreer un `core/` horiz
 ## Lancer le projet
 
 ```bash
-yarn start
 sh run start
 sh run ios
 sh run android
@@ -70,9 +69,9 @@ sh run android
 Checks principaux :
 
 ```bash
-yarn lint
-yarn typecheck
-yarn test --runInBand
+sh run lint
+sh run typecheck
+sh run test --runInBand
 ```
 
 ## Notes

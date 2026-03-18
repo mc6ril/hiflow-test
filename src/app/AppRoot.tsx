@@ -9,14 +9,12 @@ import { RecipesPage } from '@/features/recipes/presentation/pages/recipes';
 import { useRecipesStartup } from '@/features/recipes/presentation/hooks/useRecipesStartup';
 import { InitPage } from '@/presentation/pages/init';
 import { StartupFallbackPage } from '@/presentation/pages/startup-fallback';
-import type { AppTheme } from '@/presentation/theme/appTheme';
 
 type AppRootProps = {
   dependencies: AppDependencies;
-  theme: AppTheme;
 };
 
-export const AppRoot = ({ dependencies, theme }: AppRootProps) => {
+export const AppRoot = ({ dependencies }: AppRootProps) => {
   const { handleRetryStartup, startupAttempt, startupState } =
     useRecipesStartup({
       startApp: dependencies.startApp,
@@ -50,7 +48,7 @@ export const AppRoot = ({ dependencies, theme }: AppRootProps) => {
     <AppLayout
       dependencies={{
         i18n: dependencies.i18n,
-        theme,
+        theme: dependencies.theme,
       }}
     >
       <AppErrorBoundary
